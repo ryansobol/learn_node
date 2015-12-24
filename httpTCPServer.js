@@ -11,7 +11,14 @@ const server = http.createServer((req, res) => {
   process.stdout.write('Incoming request: ');
   console.log(req.method + ' ' + req.url + ' HTTP/' + req.httpVersion);
 
-  res.end('Hello world\n', () => {
+  // Enables chunked transfer
+  // https://en.wikipedia.org/wiki/Chunked_transfer_encoding
+  // res.writeHead(200);
+
+  // Also enables chunked transfer
+  res.write('Hello world\n');
+
+  res.end('Goodbye world\n', () => {
     process.stdout.write('Server response: ');
     console.log('HTTP/1.1 ' + res.statusCode + ' ' + res.statusMessage);
   });
