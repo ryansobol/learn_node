@@ -29,6 +29,15 @@ server.listen(port, () => {
   console.log('Press Ctrl-C to quit');
 });
 
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.log('ERROR: TCP port ' + port + ' already in use');
+    process.exit(1);
+  }
+
+  throw err;
+});
+
 server.on('connection', (socket) => {
   console.log('Opened socket', socket.address());
   sockets = sockets.concat(socket);
