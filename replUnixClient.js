@@ -6,7 +6,7 @@ const path = '/tmp/node-repl.sock';
 
 const socket = net.createConnection(path, () => {
   console.log('Connected to REPL server at Unix path ' + path);
-  console.log('Opened socket', socket);
+  console.log('Opened socket', socket.address());
   console.log('Press Ctrl-C to quit');
 
   process.stdin.pipe(socket);
@@ -23,7 +23,7 @@ socket.on('error', (err) => {
 });
 
 socket.on('close', () => {
-  console.log('Closed socket', socket);
+  console.log('Closed socket', socket.address());
   process.exit();
 });
 

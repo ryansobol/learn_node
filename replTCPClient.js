@@ -6,7 +6,7 @@ const port = 5001;
 
 const socket = net.createConnection(port, () => {
   console.log('Connected to REPL server on TCP port ' + port);
-  console.log('Opened socket', socket);
+  console.log('Opened socket', socket.address());
   console.log('Press Ctrl-C to quit');
 
   process.stdin.pipe(socket);
@@ -23,7 +23,7 @@ socket.on('error', (err) => {
 });
 
 socket.on('close', () => {
-  console.log('Closed socket', socket);
+  console.log('Closed socket', socket.address());
   process.exit();
 });
 
