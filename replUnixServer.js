@@ -9,8 +9,6 @@ let hasInterrupted = false;
 let sockets = [];
 
 const server = net.createServer((socket) => {
-  console.log('Opened socket', socket);
-
   const replServer = repl.start({
     input: socket,
     output: socket
@@ -20,19 +18,20 @@ const server = net.createServer((socket) => {
     socket.end();
   });
 
-  replServer.context.m = 'It worked!';
+  replServer.context.t = 'It works!';
+
+  console.log('Opened socket', socket.address());
+  sockets = sockets.concat(socket);
 
   socket.on('data', (data) => {
     process.stdout.write('> ' + data, 'utf8');
   });
 
   socket.on('close', () => {
-    console.log('Closed socket', socket);
+    console.log('Closed socket', socket.address());
     sockets = sockets.filter((s) => s !== socket);
   });
-
-  sockets = sockets.concat(socket);
-})
+});
 
 server.listen(path, () => {
   console.log('REPL server listening at Unix path ' + path);
@@ -50,24 +49,18 @@ server.on('error', (err) => {
 
 process.on('SIGINT', () => {
   if (hasInterrupted) {
-    sockets.forEach((socket) => socket.destroy());
+    sockets.forEach((s) => s.destroy());
     process.exit(130);
   }
 
   hasInterrupted = true;
 
-  server.getConnections((err, count) => {
-    if (err) {
-      console.log(err);
-    }
+  if (sockets.length) {
+    console.log('Waiting for socket(s) to close');
+    console.log('Press Ctrl-C again to forceable quit');
+  }
 
-    if (count > 0) {
-      console.log('Waiting for socket(s) to close');
-      console.log('Press Ctrl-C again to forceable quit');
-    }
-
-    server.close(() => {
-      process.exit();
-    });
+  server.close(() => {
+    process.exit();
   });
 });
