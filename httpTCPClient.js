@@ -28,8 +28,11 @@ const request = http.request(options, (res) => {
 });
 
 request.on('socket', (socket) => {
-  console.log('Connected to HTTP server on TCP port ' + options.port);
-  console.log('Opened socket', socket.address());
+  socket.on('connect', () => {
+    console.log('Connected to HTTP server on TCP port ' + options.port);
+    console.log('Opened socket', socket.address());
+    console.log();
+  });
 });
 
 request.on('error', (err) => {
