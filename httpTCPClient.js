@@ -2,8 +2,13 @@
 
 const http = require('http');
 
+const agent = new http.Agent({
+  // keepAlive: true,  // enables Connection: keep-alive
+  // maxSockets: 10    // enables Connection: keep-alive
+});
+
 const options = {
-  agent: new http.Agent({ keepAlive: true }),
+  agent: agent,
   hostname: 'localhost',
   method: 'GET',
   path: '/',
