@@ -1,6 +1,5 @@
 'use strict';
 
-const net = require('net');
 const repl = require('repl');
 const replServer = repl.start('stdin> ');
 
